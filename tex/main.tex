@@ -35,27 +35,11 @@
 
 \section{Introducción}
 
-El estudio de redes ha sido de gran interés en los últimos años, debido a que representan un conjunto de actores y las relaciones entre ellos de una manera intuitiva y se puede tener una representación visual. Muchos sistemas usados diariamente pueden ser modelados por medio de redes, como la relación entre las páginas de internet, redes de transporte y servicios diversos, redes de parentescos y \textit{Facebook}.  Las redes comúnmente son modeladas por medio de grafos, ya sean direccionales y no direccionales. 
+El estudio de redes ha sido de gran interés en los últimos años, debido a que representan un conjunto de actores y las relaciones entre ellos de una manera intuitiva y se puede tener una representación visual. Muchos sistemas usados diariamente pueden ser modelados por medio de redes, como la relación entre las páginas de internet, redes de transporte y servicios diversos, redes de parentescos y redes sociales como \textit{Facebook} o \textit{Twitter}.  Las redes comúnmente son modeladas por medio de grafos, ya sean direccionales y no direccionales. 
 
-El análisis de los grafos generados a partir de distintas redes, pueden ser utilizados para encontrar características particulares en las redes. Por ejemplo, encontrar las páginas web más importantes sobre algún tema en internet, definir comunidades en un grafo social como \textit{Facebook} o \textit{Twitter}, o incluso en una red telefónica; o calcular el camino más corto de un punto a otro en una red de transporte.
+El análisis de los grafos generados a partir de distintas redes puede ser utilizado para encontrar características particulares en las redes. Por ejemplo, encontrar las páginas web más importantes sobre algún tema en internet, definir comunidades en un grafo social como \textit{Facebook} o \textit{Twitter}, o incluso en una red telefónica; o calcular el camino más corto de un punto a otro en una red de transporte.
 
-Este trabajo se centra en las redes sociales, las cuales tienen ciertas características que deben cumplir para ser catalogadas como tal \cite{leskovec_mining_2014}. Las principales son:
-
-\begin{itemize}
-\item Existe una colección de entidades que participan en la red, que comúnmente son personas. 
-\item Existe por lo menos una relación entre las entidades de la red. 
-\item Se asume que la localidad de los nodos no es aleatoria. Se debe entender por localidad la posición que ocupan los nodos con relación a los demás, comúnmente se tienden a juntar más con nodos que comparten características similares.
-\end{itemize}
-
-Un claro ejemplo de red social es \textit{Facebook} que se puede representar como un grafo donde los usuarios son los nodos y sus conexiones son las relaciones de amistad entre ellos. De una red con éstas características se puede obtener información de las comunidades que lo integran, que nodos son más relevantes y la similitud entre ellos. 
-
-Se analizó una red social de \textit{Twitter}, creada a partir de \textit{retweets} y \textit{replies}. El objetivo es encontrar comunidades a partir de las conexiones que existen entre los usuarios.
-
-La información generada del análisis de redes de este tipo ayuda a entender el comportamiento de las entidades que lo conforman y en el caso de medios como la mercadotecnia y el comercio, pueden ser utilizadas para obtener alguna ventaja.
-
-\subsection{Comunidades en las redes sociales}
-
-Podemos definir comunidad como un conjunto de entidades que tienen  alguna atributo en común y por eso tienen a juntarse en el mismo grupo. Aplicar métodos como \textit{k-means} no capta la esencia de este tipo de redes, ya que cada entidad se asigna sólo a una comunidad y nada más. Las entidades que forman parte de redes sociales comúnmente forman parte de más de una comunidad. El análisis de una red social difiere de las demás redes en que las entidades pueden formar parte de diferentes comunidades, por ejemplo una persona puede ser parte de una institución, un grupo de amigos, pero también pertenece a una familia. 
+Este trabajo se centra en un uso menos usual del modelo de red: una red de canciones generada a partir de similutud entre canciones usando filtrado colaborativo.
 
 \section{Metodología}
 
@@ -85,9 +69,7 @@ C_{BET}(i)=\sum_{j,k}\frac{b_{jik}}{b_{jk}}
 
 donde $b_{jk}$ es el número de caminos más cortos desde el nodo j hasta el nodo $k$, y $b_{jik}$ el número de caminos más cortos desde $j$ hasta $k$ que pasan a través del nodo $i$.
 
-Los nodos con un alto valor de intermediación son muy importantes en la estructura de una red, ya que comunican comunidades con otras. Comúnmente los valores más altos de \textit{betweenness} son obtenidos por los nodos que están en los bordes de las comunidades. Si uno nodo con alta intermediación desaparece, las comunidades podrían quedar incomunicadas. Calcular el \textit{betweenness} resulta ser una tarea complicada y tardada, pues se recorre toda la red nodo por nodo.
-
-%Calcular el \textit{betweenness} resulta ser una tarea complicada, por lo que han surgido métodos, que intentan optimizarlo. Este es el caso del algoritmo de intermediación de Girvan-Newman, donde se hace una búsqueda a lo ancho a partir de un nodo aleatorio elegido como raíz. El segundo paso es asignar un valor a cada nodo que represente cuantos caminos cortos desde la raíz hasta el nodo en cuestión existen, empezando con asignar un valor de 1 a la raíz. Después desde arriba ir asignando valores a cada nodo $Y$ de la suma de las etiquetas de sus padres. El tercer y último paso consiste en calcular para cada vértice $e$ la suma de todos los nodos $Y$ que llevan de la raíz al nodo $e$. Se realiza la suma de los valores de los nodos desde el nivel más bajo. Cada nodo tiene un crédito de 1, que se tiene que dividir entre todos los caminos cortos.
+Los nodos con un alto valor de intermediación son muy importantes en la estructura de una red, ya que comunican comunidades con otras. Comúnmente los valores más altos de \textit{betweenness} son obtenidos por los nodos que están en los bordes de las comunidades. Si uno nodo con alta intermediación desaparece, las comunidades podrían quedar incomunicadas. Calcular el \textit{betweenness} resulta ser una tarea complicada y tardada, pues se recorre toda la red nodo por nodo, por esto han surgido métodos que intentan optimizarlo, como el algoritmo de intermediación de Girvan-Newman.
 
 Esta noción de centralidad en los nodos se puede extender a las aristas, y de esta forma el \textit{betweenness} de una arista es el número de caminos más cortos entre el par de nodos que corren a través de esta arista. Así, las aristas que conectan comunidades tendrán mayor nivel de \textit{betweenness}, pues al quitar estas aristas, las comunidades quedarían separadas una de la otra. Esta noción de \textit{betweenness} de aristas se puede explotar para encontrar comunidades en la red. El algoritmo Girvan-Newman hace esto siguiendo los siguientes pasos:
 

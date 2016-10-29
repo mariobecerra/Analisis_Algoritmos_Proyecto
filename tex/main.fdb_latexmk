@@ -1,7 +1,7 @@
 # Fdb version 3
-["pdflatex"] 1477762753 "main.tex" "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf" "main" 1477762753
+["pdflatex"] 1477764650 "main.tex" "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf" "main" 1477764651
   "/etc/texmf/web2c/texmf.cnf" 1468346178 1101 af7716885e081ab43982cab7b4672c1a ""
-  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.aux" 1477762753 770 76e9c93966899dea104e031b74c5ed5b ""
+  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.aux" 1477764651 770 76e9c93966899dea104e031b74c5ed5b ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -92,11 +92,11 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1458942643 31351 b32c45dce4a01cb7b53ed90c546614ca ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1468346484 1863403 f3ff9a4253bcb5fb9a9baaf0c572cb01 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1468346503 3853760 3c77546f126abc81ffe378f35fe8c936 ""
-  "main.aux" 1477762753 770 76e9c93966899dea104e031b74c5ed5b ""
-  "main.tex" 1477762752 9073 a6f6bb238cd3fbeaaf6f34342dfc4fe4 ""
+  "main.aux" 1477764651 770 76e9c93966899dea104e031b74c5ed5b ""
+  "main.tex" 1477764650 8313 d23960aa96038711b3c8f3a01f74a1b4 ""
   (generated)
-  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf"
-  "main.aux"
-  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.log"
   "main.pdf"
+  "main.aux"
   "main.log"
+  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.log"
+  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf"

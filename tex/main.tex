@@ -1,0 +1,104 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{parskip}
+\usepackage{algorithm}
+\usepackage{url}
+\usepackage{algpseudocode}
+\usepackage{geometry}
+\usepackage{amssymb}
+
+ \geometry{
+ %total={170mm,257mm},
+ top=17mm,
+ bottom=16mm,
+ left=15mm,
+ right=15mm
+ }
+ \newcommand*{\QEDB}{\hfill\ensuremath{\square}}%
+
+
+\begin{document}
+
+\title{\vspace{-1cm}Creación de playlists a partir de un grafo}
+
+\author{Mario Becerra \qquad Tania Mendoza \qquad Miguel Vilchis}
+
+\date{Octubre de 2016}
+
+\maketitle
+
+\section{Introducción}
+
+El estudio de redes ha sido de gran interés en los últimos años, debido a que representan un conjunto de actores y las relaciones entre ellos de una manera intuitiva y se puede tener una representación visual. Muchos sistemas usados diariamente pueden ser modelados por medio de redes, como la relación entre las páginas de internet, redes de transporte y servicios diversos, redes de parentescos y \textit{Facebook}.  Las redes comúnmente son modeladas por medio de grafos, ya sean direccionales y no direccionales. 
+
+El análisis de los grafos generados a partir de distintas redes, pueden ser utilizados para encontrar características particulares en las redes. Por ejemplo, encontrar las páginas web más importantes sobre algún tema en internet, definir comunidades en un grafo social como \textit{Facebook} o \textit{Twitter}, o incluso en una red telefónica; o calcular el camino más corto de un punto a otro en una red de transporte.
+
+Este trabajo se centra en las redes sociales, las cuales tienen ciertas características que deben cumplir para ser catalogadas como tal \cite{leskovec_mining_2014}. Las principales son:
+
+\begin{itemize}
+\item Existe una colección de entidades que participan en la red, que comúnmente son personas. 
+\item Existe por lo menos una relación entre las entidades de la red. 
+\item Se asume que la localidad de los nodos no es aleatoria. Se debe entender por localidad la posición que ocupan los nodos con relación a los demás, comúnmente se tienden a juntar más con nodos que comparten características similares.
+\end{itemize}
+
+Un claro ejemplo de red social es \textit{Facebook} que se puede representar como un grafo donde los usuarios son los nodos y sus conexiones son las relaciones de amistad entre ellos. De una red con éstas características se puede obtener información de las comunidades que lo integran, que nodos son más relevantes y la similitud entre ellos. 
+
+Se analizó una red social de \textit{Twitter}, creada a partir de \textit{retweets} y \textit{replies}. El objetivo es encontrar comunidades a partir de las conexiones que existen entre los usuarios.
+
+La información generada del análisis de redes de este tipo ayuda a entender el comportamiento de las entidades que lo conforman y en el caso de medios como la mercadotecnia y el comercio, pueden ser utilizadas para obtener alguna ventaja.
+
+\subsection{Comunidades en las redes sociales}
+
+Podemos definir comunidad como un conjunto de entidades que tienen  alguna atributo en común y por eso tienen a juntarse en el mismo grupo. Aplicar métodos como \textit{k-means} no capta la esencia de este tipo de redes, ya que cada entidad se asigna sólo a una comunidad y nada más. Las entidades que forman parte de redes sociales comúnmente forman parte de más de una comunidad. El análisis de una red social difiere de las demás redes en que las entidades pueden formar parte de diferentes comunidades, por ejemplo una persona puede ser parte de una institución, un grupo de amigos, pero también pertenece a una familia. 
+
+\section{Metodología}
+
+El principal objetivo es identificar comunidades en el grafo. Existen varios tipos de algoritmos de detección de comunidades, algunos son divisivos, en el sentido que detectan ligas inter-comunidad y después los quitan de la red; otros son aglomerativos, que van juntando nodos recursivamente; y otros están basados en la maximización de una función objetivo.
+
+\subsection{Modularidad}
+
+Una medida muy usada para hacer conglomerados en redes sociales es la modularidad, la cual es un escalar entre -1 y 1 que mide la fuerza de la división de una red en conglomerados. Una red con modularidad alta tiene conexiones fuertes dentro de las comunidades, pero débiles entre las comunidades. Muchos de los algoritmos basados en optimización como los mencionados anteriormente buscan encontrar particiones que maximicen la modularidad.
+
+En particular, la modularidad $Q$ está definida como la fracción de arcos que están dentro de cada comunidad menos el número esperado de arcos en cada comunidad de un grafo aleatorio con la misma distribución de grados de entrada y salida que el grafo que se estudia. Matemáticamente, esto se ve como\cite{blondel_fast_2008}
+
+\begin{equation}
+Q = \frac{1}{2m} \sum_{i,j} (A_{ij} - \frac{k_i k_j}{2m}) \delta (c_i, c_j),
+\end{equation}
+
+donde $A_{ij}$ representa el peso del arco entre los nodos $i$ y $j$, $k_i = \sum_j A_{ij}$ es la suma de los pesos de los arcos que salen del nodo $i$, $c_i$ es la comunidad que se le asigna al vértice $i$, $\delta(u,v)$ es $1$ si $u=v$ y $0$ en otro caso, y $m = \frac{1}{2} \sum_{ij} A_{ij}$.
+
+Una desventaja de utilizar la modularidad como función objetivo, es que puede fallar en encontrar comunidades pequeñas en una red muy grande, esto debido a la naturaleza de la función de modularidad, que resta el número esperado de vértices en una red aleatoria, el cual va disminuyendo mientras la red va creciendo; por lo que esto puede ser menor que uno, entonces la modularidad puede interpretar esto como signo de correlación fuerte entre dos comunidades, por lo que las juntaría en una sola comunidad.
+
+\subsection{\textit{Betweenness}}
+
+\textit{Betweenness} o intermediación es una medida del número de veces que un nodo actúa como puente en el camino más corto entre dos nodos. Es una forma de cuantificar el control que tiene  un nodo en la comunicación existente entre otros. La idea básica detrás de esta medida es que los nodos con mayor \textit{betweenness} son los que aparecen con mayor probabilidad en los caminos más cortos, de esta forma, es una medida de centralidad en una red. Formalmente se puede definir como \cite{sun_survey_2011},
+
+\begin{equation}
+C_{BET}(i)=\sum_{j,k}\frac{b_{jik}}{b_{jk}} 
+\end{equation}
+
+donde $b_{jk}$ es el número de caminos más cortos desde el nodo j hasta el nodo $k$, y $b_{jik}$ el número de caminos más cortos desde $j$ hasta $k$ que pasan a través del nodo $i$.
+
+Los nodos con un alto valor de intermediación son muy importantes en la estructura de una red, ya que comunican comunidades con otras. Comúnmente los valores más altos de \textit{betweenness} son obtenidos por los nodos que están en los bordes de las comunidades. Si uno nodo con alta intermediación desaparece, las comunidades podrían quedar incomunicadas. Calcular el \textit{betweenness} resulta ser una tarea complicada y tardada, pues se recorre toda la red nodo por nodo.
+
+%Calcular el \textit{betweenness} resulta ser una tarea complicada, por lo que han surgido métodos, que intentan optimizarlo. Este es el caso del algoritmo de intermediación de Girvan-Newman, donde se hace una búsqueda a lo ancho a partir de un nodo aleatorio elegido como raíz. El segundo paso es asignar un valor a cada nodo que represente cuantos caminos cortos desde la raíz hasta el nodo en cuestión existen, empezando con asignar un valor de 1 a la raíz. Después desde arriba ir asignando valores a cada nodo $Y$ de la suma de las etiquetas de sus padres. El tercer y último paso consiste en calcular para cada vértice $e$ la suma de todos los nodos $Y$ que llevan de la raíz al nodo $e$. Se realiza la suma de los valores de los nodos desde el nivel más bajo. Cada nodo tiene un crédito de 1, que se tiene que dividir entre todos los caminos cortos.
+
+Esta noción de centralidad en los nodos se puede extender a las aristas, y de esta forma el \textit{betweenness} de una arista es el número de caminos más cortos entre el par de nodos que corren a través de esta arista. Así, las aristas que conectan comunidades tendrán mayor nivel de \textit{betweenness}, pues al quitar estas aristas, las comunidades quedarían separadas una de la otra. Esta noción de \textit{betweenness} de aristas se puede explotar para encontrar comunidades en la red. El algoritmo Girvan-Newman hace esto siguiendo los siguientes pasos:
+
+\begin{enumerate}
+\item Se calcula el \textit{betweenness} de cada arco
+\item Se quita el arco con mayor \textit{betweenness}
+\item Se recalcula el \textit{betweenness} de los arcos afectados por la acción de haber quitado el arco
+\item Se repiten los pasos 2 y 3 hasta que no queden más arcos
+\end{enumerate}
+
+Este algoritmo devuelve un dendrograma en el cual las hojas son los nodos, con esto se pueden asignar comunidades a los nodos.
+
+
+\end{document}

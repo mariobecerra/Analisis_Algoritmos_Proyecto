@@ -13,8 +13,7 @@ artistas_unicos <- read_delim("../../data/artistas_unicos_bash.tsv",
   filter(!is.na(new_id)) %>% 
   filter(!duplicated(new_id))
 
-similitudes <- read_tsv("../../data/filtered-similarities-50.tsv", 
-                        n_max = 1000000,
+similitudes <- read_tsv("../../data/filtered-similarities-50.tsv",
                         col_names = F)
 
 similitudes_2 <- similitudes %>% 
@@ -26,8 +25,17 @@ similitudes_2 <- similitudes %>%
 
 grafo_sims <- as.undirected(graph.data.frame(similitudes_2, vertices = NULL))
 
+cat("Empieza a calcular clusters", 
+    "\n",
+    "Hora:",
+    as.character(Sys.time()),
+    file = "../../out/0.log")
+
 clusters <- cluster_louvain(grafo_sims, weights = similitudes_2$sim)
 
-
-
+cat("Terminó de calcular clusters", 
+    "\n",
+    "Hora:",
+    as.character(Sys.time()),
+    file = "../../out/1.log")
 

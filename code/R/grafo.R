@@ -33,6 +33,8 @@ cat("Empieza a calcular clusters",
 
 clusters <- cluster_louvain(grafo_sims, weights = similitudes_2$sim)
 
+saveRDS(clusters, "../../out/clusters.rds")
+
 cat("Terminó de calcular clusters", 
     "\n",
     "Hora:",

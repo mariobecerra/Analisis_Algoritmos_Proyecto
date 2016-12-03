@@ -23,21 +23,11 @@ similitudes_2 <- similitudes %>%
          Artist.y = paste0(X2, "_", Artist.y)) %>% 
   select(Artist.x, Artist.y, sim = X3)
 
-grafo_sims <- as.undirected(graph.data.frame(similitudes_2, vertices = NULL))
+saveRDS(similitudes_2, "../../out/similitudes.rds")
 
-cat("Empieza a calcular clusters", 
-    "\n",
-    "Hora:",
-    as.character(Sys.time()),
-    file = "../../out/0.log")
+grafo_sims <- graph_from_edgelist(as.matrix(similitudes_2[,1:2]),
+                                  directed = F)
 
-clusters <- cluster_louvain(grafo_sims, weights = similitudes_2$sim)
+#grafo_sims <- graph.data.frame(similitudes_2, directed = F)
 
-saveRDS(clusters, "../../out/clusters.rds")
-
-cat("Terminó de calcular clusters", 
-    "\n",
-    "Hora:",
-    as.character(Sys.time()),
-    file = "../../out/1.log")
-
+saveRDS(grafo_sims, "../../out/grafo_sims.rds")

@@ -23,5 +23,7 @@ communities_artists_df <- lapply(1:length(communities_artists), function(i) {
   left_join(artists_plays %>% 
               select(Artist, number_of_plays, number_of_users_listened))
 
+saveRDS(communities_artists_df, "../../out/communities_artists_df.rds")
+
 communities_artists_df %>% group_by(community) %>% top_n(n = 30, wt = number_of_plays) %>% View
 

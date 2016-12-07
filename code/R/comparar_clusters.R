@@ -3,6 +3,7 @@ library(tidyverse)
 library(dplyr)
 library(devtools)
 library(Rspotify)
+library(reshape)
 keys <- spotifyOAuth("proyecto_cairo","e0eada50949046f6a3900bc057a2d26e","546ec83e63224d798f3da7edc4845fea")
 
 cluster <- readRDS("../../out/communities_artists_df.rds") 
@@ -43,7 +44,7 @@ get_group_by_id <- function(idx, data) {
       matched<-c(matched,item_to_search)
     }
   }
-  return (matched)
+  return (spotify_artists )
 }
  
 ###########################################################
@@ -54,7 +55,38 @@ get_genres <- function(artist_name) {
   artist_name <-gsub(" ", "+", artist_name)
   #api Spotify: 
   artist_info <- searchArtist(artist_name)
-  return (artist_info$genres[[1]])
+  print(artist_info)
+  result <- try(artist_info$genres[[1]]);
+  
+  if (class(result) == "try-error") {
+    return (result)
+  }
+  return( c())
+}
+###########################################################
+#
+# Regresa un df con los generos de un cluste
+#
+###########################################################
+
+get_cluster_df <- function (idx) {
+  group_list  <- get_head_by_id(toString(idx), cluster)
+  genre_list  = c()
+  
+  for (item in group_list){
+    tmp <- get_genres(item)
+    if (length(tmp) >= 1) {
+      genre_list <- c(genre_list, tmp)
+    }
+  }
+  
+  generos <-data.frame(genre_list)
+  gn <- generos %>% 
+    group_by(genre_list) %>% 
+    summarise(number_artists = n()) %>%
+    arrange(desc(number_artists))
+  gn['cluster'] = idx
+  return(gn)
 }
 
 ###########################################################
@@ -76,22 +108,31 @@ get_head_by_id <- function(idx, data, size=20) {
 #########################################################
 
 #Grafica de distribucion por cluster
+g_all <- data.frame()
 
-#for (i in 1:14) {
-  group_list  <- get_head_by_id("1", cluster)
-  genre_list  = c()
-  i <- 1
-  for (item in group_list){
-    genre_list <- c(genre_list,get_genres(item))
-  }
-  genre_table <- tail(sort(prop.table(table(genre_list))),n=7)
-  barplot( genre_table, names.arg=gsub("\\s","\n", rownames(genre_table)))
-#}
+for (i in 1:14 ){
+  g_all <-rbind(g_all,get_cluster_df(i))
+  
+}
+
+saveRDS(g_all, "../../out/generos.rds")
+
+
 #Porcentaje de artistas relacionados 
 x = array(list(), 14)
 for (i in 1:14 ){
   x[[i]] <- get_group_by_id(toString(i),cluster)
 }
+
+total <- 0
+for (i in 1:14 ){
+  total <- total + length(x[[i]])
+}
+
+
+
+
+
 
 
 

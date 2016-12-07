@@ -15,5 +15,6 @@ generos %>%
   geom_bar(aes(x = genre_list, y = number_artists), 
            stat = 'identity') +
   facet_wrap(~cluster, scales = 'free') + 
-  axis_labels_vert()
+  axis_labels_vert() +
+  theme_bw()
 

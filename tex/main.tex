@@ -90,7 +90,7 @@ Este trabajo se centra en un uso menos común del modelo de red: una red de arti
 
 Para lograr el objetivo de este trabajo, se necesitan solucionar dos problemas distintos. Por un lado, se necesita generar una red de artistas a partir del histórico de reproducciones. Para esto, se hace un cálculo de similitud entre cada pareja de artistas para colocar arcos entre aquellos que tengan una similitud alta. Posteriormente, se quieren encontrar comunidades en esta red para generar una lista de reproducción.
 
-Existen diversas metodologías para resolver ambos problemas, y se detallarán a continuación tanto la metodología elegida como algunas alternativas.
+Existen diversas metodologías para resolver ambos problemas, y se detallarán a continuación las metodologías elegidas: Filtro Colaborativo usando mínimos cuadrados alternados para el cálculo de similitudes y optimización de Modularidad con el algoritmo de Louvain para el de detección de comunidades.
 
 \section{Cálculo de la similitud}
 
@@ -136,7 +136,7 @@ Se define una función que mide el nivel de confianza de que $r_{ui} > 0$ de la 
 
 con $\alpha > 0$. Esta función nos permite tratar los feedbacks implícitos como ratings.
 
-La $f$ es el número deseado de \textbf{factores latentes} de $R$. De esta forma, la calificación de un usuario $u$ a un producto $p$ es una combinación lineal de estos factores latentes.
+La $f$ es el número deseado de \textbf{factores latentes} de $R$. De esta forma, la calificación de un usuario a un producto es una combinación lineal de estos factores latentes.
 
 \[
     R_{ij} = \sum_{k = 1}^f U_{ik} C_{jk}
@@ -146,16 +146,30 @@ donde $U_{ik}$ es la entrada $(i, k)$ de $U$ y $C_{jk}$ es la entrada $(j, k)$ d
 
 Ahora, la similitud entre productos se puede calcular a partir de la matriz $C$ donde cada renglón representa a cada producto en términos de sus factores latentes. Esta matriz tiene una dimensión considerablemente menor a la matriz original $R$, por lo que evitamos el problema de dimensionalidad.
 
-El algoritmo que utilizamos para encontrar estas matrices de rango bajo se llama \textit{Alternate Least Squares}, es decir, mínimos cuadrados alternados. Se utiliza la función objetivo dada por la ecuación (\ref{eq:loss_func}).
+El algoritmo que utilizamos para encontrar estas matrices de rango bajo se llama \textit{Alternate Least Squares}, es decir, mínimos cuadrados alternados. 
+Se define, primero, la matriz binaria de reproducciones $P$ tal que la entrada $(u, i)$, denotada por $p_{ui}$, es tal que 
+
+\[   
+p_{ui} = 
+     \begin{cases}
+       1 \text{ si } R_{ui} > 0 \\
+       0 \text{ si } R_{ui} = 0, \
+     \end{cases}
+\]
+
+donde $R_{ui}$ es el número de veces que el usuario $i$ escuchó al artista $i$, dado por la matriz $R$.
+Se utiliza la función objetivo dada por la ecuación (\ref{eq:loss_func}).
 
 \begin{equation}
     \label{eq:loss_func}
     \min_{u, c} \sum_{(j, k)} \gamma_{jk} \left( p_{j, k} - u_j^T c_k \right)^2 + \lambda \left( \sum_j \norm{u_j}^2 + \sum_k \norm{c_k}^2 \right) 
 \end{equation}
 
+
+
 La minimización por mínimos cuadrados alternados es un proceso iterativo en el cual se inicia con una matriz aleatoria $C$ y se obtiene $U$ a partir de optimizar (\ref{eq:loss_func}), posteriormente se fija $U$ y se optimiza (\ref{eq:loss_func}) para obtener $C$.
 
-En cada iteración, se resuelve un problema de optimización en un tiempo de orden $O(p^2N + p^3 (m + n))$, donde $N$ es el número total usuarios que consumieron al menos un producto. Si el número máximo de iteraciones es $l$, entonces el obtener la matriz $C$ tiene una complejidad de orden $O(l (p^2N + p^3 (m + n)))$.
+En cada iteración, se resuelve un problema de optimización en un tiempo de orden $O(f^2N + f^3 (m + n))$, donde $N$ es el número total usuarios que consumieron al menos un producto. Si el número máximo de iteraciones es $l$, entonces el obtener la matriz $C$ tiene una complejidad de orden $O(l (f^2N + f^3 (m + n)))$.
 
 
 
@@ -187,7 +201,7 @@ La modularidad $Q$ se calcula como la proporción de arcos que están dentro de 
 
 donde $A_{ij}$ representa el peso del arco entre los nodos $i$ y $j$; $k_i = \sum_j A_{ij}$ es la suma de los pesos de los arcos que salen del nodo $i$; $c_i$ es la comunidad que se le asigna al vértice $i$; $\delta(u,v)$ es $1$ si $u=v$ y $0$ en otro caso; y $m = \frac{1}{2} \sum_{ij} A_{ij}$ es peso total de los arcos de la red.
 
-Una limitante de utilizar la modularidad como función objetivo, es que puede fallar en encontrar comunidades pequeñas en una red muy grande. Esto se debe a que se resta el número esperado de vértices, el cual va disminuyendo conforme la red crece, volviéndo un término despreciable y provocando que la medida junte dos grupos pequeños en una misma comunidad. Esta limitante puede ser una ventaja en nuestra aplicación particular, pues balanceará el tamaño de las comunidades.
+El problema de optimización de mdularidad es NP-Completo \cite{blondel_fast_2008}, sin embargo existen heurísticas greedy como el algoritmo de Louvain, el cual reduce la complejidad a $O(nlogn)$\cite{blondel_fast_2008}.
 
 \subsection{Algoritmo de Louvain}
 
@@ -543,54 +557,60 @@ Después de aplicar la metogología al conjunto de datos descrito obtuvimos 14 c
 \newpage
 Para conocer la calidad de la división, tomamos como representante del grupo a los artistas con mayor número de reproducciones. Seguido de eso, usamos la API de \textit{Spotify}, para encontrar los artistas relacionados con cada representante.
 
-
 La lista que obtenemos del API de \textit{Spotify} contiene 20 artistas relacionados, seguido de esto,  
 buscamos a cada uno de los artistas en el grupo del representante. Se espera que los 20 artistas 
 se encuentren en la comunidad del representante.
 
-En promedio, los artistas relacionados que se encontraron en el mismo grupo que el artista representante fueron $40.3 \%$. Con los siguientes resultados: 
+En promedio, los artistas relacionados que se encontraron en el mismo grupo que el artista representante fueron $40.3 \%$, los resultados se muestran en la Tabla IV.
 
-
-\begin{tabular}{|L{2.5cm}|C{2.5cm} |C{2.5cm} |}
+\begin{table}[]
+\centering
+\caption{Promedio de artistas relacionados}
 \label{tab:artistas_encontrados_count}
- \hline
-& Número de grupos & Artistas encontrados de 20\\ \hline
-Mejores casos & 3 & 18 \\ \hline
+\begin{tabular}{|L{1.2cm}|L{2.5cm}|L{2.7cm}|}
+\hline
+ &  Número de grupos & Artistas encontrados de 20 \\ \hline
+Mejores casos & 3 & 18  \\ \hline
 Peores casos & 3 & 0 \\ \hline
-Caso promedio & 8 & 7.9 \\ \hline
+Caso promedio & 8 & 7.9  \\ \hline
 \end{tabular}
-
+\end{table}
 
 El grupo $12$ representa uno de los  mejores grupos, ya que, de los $20$ artistas relacionados con el representante del grupo, $18$ se encontraron dentro de nuestro grupo. 
 Los artistas con mayor número de reproducciones del grupo se muestran
-en la siguiente tabla: 
+en la Tabla V. 
 
-\begin{tabular}{|L{3.5cm}|L{3.5cm} |}
+\begin{table}[]
+\centering
+\caption{Grupo 12}
 \label{tab:relaciones}
-\multicolumn{2}{c}{Grupo 12}\\ \hline
+\begin{tabular}{|L{3.5cm}|L{3.5cm} |}
+%\multicolumn{2}{c}{}\\ 
+\hline
      \textbf{Artistas  con más reproducciones} & \textbf{Artistas relacionados con Radiohead (Spotify)} \\ \hline
                Radiohead   & \cellcolor{intnull}  Radiohead \\ \hline
-           The Beatles	   & \cellcolor{intnull}     Blur        \\ \hline
-       Nine Inch Nails	   & \cellcolor{intnull}  The Flaming Lips \\ \hline       
-                  Muse	   & \cellcolor{intnull}  Arcade Fire    \\ \hline
-              Coldplay	   & \cellcolor{intnull}  Pixies        \\ \hline
-          Depeche Mode	   & \cellcolor{intnull}  Interpol       \\ \hline 
-            Pink Floyd	   & \cellcolor{intnull}  Portishead      \\ \hline  
-   Death Cab For Cutie	   & \cellcolor{intnull}  Beck        \\ \hline
-               Placebo	   & \cellcolor{intnull}  Sonic Youth    \\ \hline    
-         Elliott Smith	   & \cellcolor{intnull}  Wilco        \\ \hline
-              The Cure	   &          PJ Harvey        \\ \hline
-           David Bowie	   &\cellcolor{intnull}   The Smashing Pumpkins \\ \hline
-           The Killers	   &\cellcolor{intnull}   My Bloody Valentine    \\ \hline
-            The Smiths	   &    LCD Soundsystem        \\ \hline
- Red Hot Chili Peppers	   &\cellcolor{intnull}   Sigur Rós     \\ \hline   
-             Metallica	   &\cellcolor{intnull}   Joy Division   \\ \hline     
-              Interpol	   &\cellcolor{intnull}   Animal Collective \\ \hline       
-            Bloc Party	   & \cellcolor{intnull}  Grizzly Bear   \\ \hline     
- Black Rebel Motorcycle Club &	\cellcolor{intnull} Pulp       \\ \hline 
-           Arcade Fire	     & \cellcolor{intnull}  Placebo      \\ \hline  
- Modest Mouse	             & \cellcolor{intnull}  Björk   \\ \hline 
+           The Beatles     & \cellcolor{intnull}     Blur        \\ \hline
+       Nine Inch Nails     & \cellcolor{intnull}  The Flaming Lips \\ \hline       
+                  Muse     & \cellcolor{intnull}  Arcade Fire    \\ \hline
+              Coldplay     & \cellcolor{intnull}  Pixies        \\ \hline
+          Depeche Mode     & \cellcolor{intnull}  Interpol       \\ \hline 
+            Pink Floyd     & \cellcolor{intnull}  Portishead      \\ \hline  
+   Death Cab For Cutie     & \cellcolor{intnull}  Beck        \\ \hline
+               Placebo     & \cellcolor{intnull}  Sonic Youth    \\ \hline    
+         Elliott Smith     & \cellcolor{intnull}  Wilco        \\ \hline
+              The Cure     &          PJ Harvey        \\ \hline
+           David Bowie     &\cellcolor{intnull}   The Smashing Pumpkins \\ \hline
+           The Killers     &\cellcolor{intnull}   My Bloody Valentine    \\ \hline
+            The Smiths     &    LCD Soundsystem        \\ \hline
+ Red Hot Chili Peppers     &\cellcolor{intnull}   Sigur Rós     \\ \hline   
+             Metallica     &\cellcolor{intnull}   Joy Division   \\ \hline     
+              Interpol     &\cellcolor{intnull}   Animal Collective \\ \hline       
+            Bloc Party     & \cellcolor{intnull}  Grizzly Bear   \\ \hline     
+ Black Rebel Motorcycle Club &  \cellcolor{intnull} Pulp       \\ \hline 
+           Arcade Fire       & \cellcolor{intnull}  Placebo      \\ \hline  
+ Modest Mouse              & \cellcolor{intnull}  Björk   \\ \hline 
 \end{tabular}
+\end{table}
 
 Del lado izquierdo se muestran los artistas con mayor número de reproducciones del grupo, mientras que del lado izquierdo los artistas relacionados con el representante del grupo, es decir  los artistas relacionados con $Radiohead$, obtenidos de la API de \textit{Spotify}. Además, se sombrearon los artistas relacionados que se encuentran en el grupo. 
 

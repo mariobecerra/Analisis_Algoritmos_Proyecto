@@ -2052,9 +2052,11 @@
     <bcf:citekey order="1">beyer1999nearest</bcf:citekey>
     <bcf:citekey order="2">hu2008collaborative</bcf:citekey>
     <bcf:citekey order="3">blondel_fast_2008</bcf:citekey>
-    <bcf:citekey order="4">Blondel08fastunfolding</bcf:citekey>
-    <bcf:citekey order="5">Fortunato201075</bcf:citekey>
-    <bcf:citekey order="6">arya1994optimal</bcf:citekey>
+    <bcf:citekey order="4">blondel_fast_2008</bcf:citekey>
+    <bcf:citekey order="5">blondel_fast_2008</bcf:citekey>
+    <bcf:citekey order="6">Blondel08fastunfolding</bcf:citekey>
+    <bcf:citekey order="7">Fortunato201075</bcf:citekey>
+    <bcf:citekey order="8">arya1994optimal</bcf:citekey>
     <bcf:citekey order="0">*</bcf:citekey>
   </bcf:section>
   <bcf:sortlist section="0" name="nty/global" type="entry" sortscheme="nty" sortnamekeyscheme="global">

@@ -1,11 +1,12 @@
 # Fdb version 3
-["biber main"] 1481129775 "main.bcf" "main.bbl" "main" 1481129778
-  "main.bcf" 1481129778 91816 86fb9208adac3e023e3cbaa44ca269b5 ""
+["biber main"] 1481158872 "main.bcf" "main.bbl" "main" 1481158874
+  "main.bcf" 1481158874 91934 941af06f88d3696ddf25fd5acc782fb5 ""
   (generated)
+  "main.blg"
   "main.bbl"
-["pdflatex"] 1481129777 "main.tex" "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf" "main" 1481129778
+["pdflatex"] 1481158872 "main.tex" "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf" "main" 1481158874
   "/etc/texmf/web2c/texmf.cnf" 1468346178 1101 af7716885e081ab43982cab7b4672c1a ""
-  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.aux" 1481129778 4414 e4110555bcf267e88677b16d7a7aaaa7 ""
+  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.aux" 1481158874 4711 89d381f886d2f2b49b16ac0cb337c82d ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1136768653 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -111,15 +112,15 @@
   "IEEEtran.cls" 1481151316 202657 f6698b073bb6e66a6e6436a00d85499c ""
   "artistas_por_comunidad.png" 1481151316 22509 facef0a4be681fc7a47e1100dcbcf98b ""
   "generos_plot_2.png" 1481151316 182962 9a6f7f9d9e971e9cc6eb8b67fac3d395 ""
-  "main.aux" 1481129778 4414 e4110555bcf267e88677b16d7a7aaaa7 ""
+  "main.aux" 1481158874 4711 89d381f886d2f2b49b16ac0cb337c82d ""
   "main.bbl" 0 -1 0 "biber main"
-  "main.run.xml" 1481129778 2308 951942dc1aa5ff011a5089dd89c8303c ""
-  "main.tex" 1481151316 37964 c31b5cfa1c1e5c8caee9642dbe676135 ""
+  "main.run.xml" 1481158874 2308 951942dc1aa5ff011a5089dd89c8303c ""
+  "main.tex" 1481158856 38365 7f2a0680c5d3e187a3217f672a692c84 ""
   (generated)
   "main.log"
-  "main.bcf"
-  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.log"
-  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf"
-  "main.aux"
-  "main.run.xml"
   "main.pdf"
+  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.pdf"
+  "main.bcf"
+  "main.run.xml"
+  "main.aux"
+  "/home/mario/Dropbox/Mario/Escuela/ITAM/MCC/Analisis_de_algoritmos/Proyecto/tex/main.log"
